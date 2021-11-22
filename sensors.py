@@ -21,7 +21,7 @@ bus = smbus.SMBus(DEVICE_BUS)
 
 aReceiveBuf = []
 
-aReceiveBuf.append(0x00) # 占位符
+aReceiveBuf.append(0x00)
 
 for i in range(TEMP_REG,HUMAN_DETECT + 1):
     aReceiveBuf.append(bus.read_byte_data(DEVICE_ADDR, i))
