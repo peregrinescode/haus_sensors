@@ -1,9 +1,5 @@
 '''
-Plots humidity over four time scales:
-1) last 6hours
-2) 24 hour period
-3) 7 days
-4) all time
+Plots temp AND humidity 
 '''
 
 import pandas as pd
@@ -27,16 +23,26 @@ averaged = last24h.resample('1H').mean()
 
 # Plot for last 6 hours
 fig, ax = plt.subplots()
+ax2=ax.twinx()
 
 # ax.plot(last24h.index, last24h['H(rel%)'], '-')
 ax.plot(averaged.index, averaged['H(rel%)'], '-')
+ax2.plot(averaged.index, averaged['T(off-chip)'], '-C3')
 
 ax.xaxis.set_major_formatter(
     mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
 
 ax.set_ylabel('Rel. humidity %')
+ax2.set_ylabel(u'Temperature (℃)')
 
-sns.despine()
+ax.tick_params(axis='y', colors='C0')
+ax.yaxis.label.set_color('C0')
+
+ax2.tick_params(axis='y', colors='C3')
+ax2.yaxis.label.set_color('C3')
+
+
+# sns.despine()
 plt.tight_layout()
 # plt.show()
-fig.savefig('humidity.png', dpi=300, pad_inches=0.05, bbox_inches='tight')
+fig.savefig('temp_AND_humidity.png', dpi=300, pad_inches=0.05, bbox_inches='tight')
