@@ -10,13 +10,13 @@ sns.set_style("ticks")
 sns.set_context("talk")
 
 # Read in data from file
-df = pd.read_csv('~/git/haus_sensors/data.csv', index_col=0)
+df = pd.read_csv('data.csv', index_col=0)
 
 # Specify date/time format
 df.index = pd.to_datetime(df.index)
 
 # Cut range
-last24h = df.last('7d')
+last24h = df.last('38h')
 
 # Resample over a period and take mean
 averaged = last24h.resample('1H').mean()
@@ -33,7 +33,7 @@ ax.xaxis.set_major_formatter(
     mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
 
 ax.set_ylabel('Rel. humidity %')
-ax2.set_ylabel(u'Temperature (℃)')
+ax2.set_ylabel(u'Temperature (\u00B0)')
 
 ax.tick_params(axis='y', colors='C0')
 ax.yaxis.label.set_color('C0')
