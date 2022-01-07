@@ -33,56 +33,56 @@ def main():
 
     # --- Read OFF-CHIP TEMPERATURE SENSOR
     if aReceiveBuf[STATUS_REG] & 0x01 :
-        print("Off-chip temperature sensor overrange!")
+        # print("Off-chip temperature sensor overrange!")
         T = ''
     elif aReceiveBuf[STATUS_REG] & 0x02 :
-        print("No external temperature sensor!")
+        # print("No external temperature sensor!")
         T = ''
     else :
-        print("Current off-chip sensor temperature = %d Celsius" % aReceiveBuf[TEMP_REG])
+        # print("Current off-chip sensor temperature = %d Celsius" % aReceiveBuf[TEMP_REG])
         T = aReceiveBuf[TEMP_REG]
 
 
     # --- Read ON-BOARD BRIGHTNESS SENSORS
     if aReceiveBuf[STATUS_REG] & 0x04 :
-        print("Onboard brightness sensor overrange!")
+        # print("Onboard brightness sensor overrange!")
         L = ''
     elif aReceiveBuf[STATUS_REG] & 0x08 :
-        print("Onboard brightness sensor failure!")
+        # print("Onboard brightness sensor failure!")
         L = ''
     else :
-        print("Current onboard sensor brightness = %d Lux" % (aReceiveBuf[LIGHT_REG_H] << 8 | aReceiveBuf[LIGHT_REG_L]))
+        # print("Current onboard sensor brightness = %d Lux" % (aReceiveBuf[LIGHT_REG_H] << 8 | aReceiveBuf[LIGHT_REG_L]))
         L = (aReceiveBuf[LIGHT_REG_H] << 8 | aReceiveBuf[LIGHT_REG_L])
 
     # --- Read ON-BOARD TEMP
-    print("Current onboard sensor temperature = %d Celsius" % aReceiveBuf[ON_BOARD_TEMP_REG])
+    # print("Current onboard sensor temperature = %d Celsius" % aReceiveBuf[ON_BOARD_TEMP_REG])
     T2 = aReceiveBuf[ON_BOARD_TEMP_REG]
 
     # --- Read ON-BOARD HUMIDITY
-    print("Current onboard sensor humidity = %d %%" % aReceiveBuf[ON_BOARD_HUMIDITY_REG])
+    # print("Current onboard sensor humidity = %d %%" % aReceiveBuf[ON_BOARD_HUMIDITY_REG])
     H = aReceiveBuf[ON_BOARD_HUMIDITY_REG]
 
     if aReceiveBuf[ON_BOARD_SENSOR_ERROR] != 0 :
-        print("Onboard temperature and humidity sensor data may not be up to date!")
+        # print("Onboard temperature and humidity sensor data may not be up to date!")
         T2 = ''
         H = ''
 
     # --- Read BAROMETER TEMP AND PRES
     if aReceiveBuf[BMP280_STATUS] == 0 :
-        print("Current barometer temperature = %d Celsius" % aReceiveBuf[BMP280_TEMP_REG])
+        # print("Current barometer temperature = %d Celsius" % aReceiveBuf[BMP280_TEMP_REG])
         T3 = aReceiveBuf[BMP280_TEMP_REG]
-        print("Current barometer pressure = %d pascal" % (aReceiveBuf[BMP280_PRESSURE_REG_L] | aReceiveBuf[BMP280_PRESSURE_REG_M] << 8 | aReceiveBuf[BMP280_PRESSURE_REG_H] << 16))
+        # print("Current barometer pressure = %d pascal" % (aReceiveBuf[BMP280_PRESSURE_REG_L] | aReceiveBuf[BMP280_PRESSURE_REG_M] << 8 | aReceiveBuf[BMP280_PRESSURE_REG_H] << 16))
         P = (aReceiveBuf[BMP280_PRESSURE_REG_L] | aReceiveBuf[BMP280_PRESSURE_REG_M] << 8 | aReceiveBuf[BMP280_PRESSURE_REG_H] << 16)
     else :
-        print("Onboard barometer works abnormally!")
+        # print("Onboard barometer works abnormally!")
         T3 = ''
         P = ''
 
     if aReceiveBuf[HUMAN_DETECT] == 1 :
-        print("Live body detected within 5 seconds!")
+        # print("Live body detected within 5 seconds!")
         M = 1
     else:
-        print("No humans detected!")
+        # print("No humans detected!")
         M = 0
 
 
