@@ -1,11 +1,12 @@
 import twitter
 import os
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import seaborn as sns
 sns.set_style("ticks")
-sns.set_context("talk")
+sns.set_context("paper")
 
 from dotenv import load_dotenv
 
@@ -14,43 +15,46 @@ def sensorData():
     '''Create graphs'''
 
     # Read in data from file
-    df = pd.read_csv('data.csv', index_col=0)
+    df = pd.read_csv('/home/pi/haus_sensors/data.csv', index_col=0)
 
-    # Specify date/time format
     df.index = pd.to_datetime(df.index)
-    last24h = df.last('38h')
-
+    
+    # Get all data from todays date
+    today = pd.Timestamp.today().date()
+    todaysData = df[str(today)]
+    
     # Resample over a period and take mean
-    averaged = last24h.resample('1H').mean()
+    averaged = todaysData.resample('15min').mean()
 
     # Plot for last 6 hours
-    fig, ax = plt.subplots(2,2)
+    fig, axs = plt.subplots(2,2)
 
-    ax[0,0].plot(last24h.index, last24h['T(off-chip)'], '-')
-    ax[0,1].plot(last24h.index, last24h['P(Pa)'], '-')
-    ax[1,0].plot(averaged.index, averaged['H(rel%)'], '-')
-    ax[1,1].plot(averaged.index, averaged['L(lux)'], '-')
+    axs[0,0].plot(averaged.index, averaged['T(off-chip)'], 'C0-')
+    axs[0,1].plot(averaged.index, averaged['P(Pa)'], 'C1-')
+    axs[1,0].plot(averaged.index, averaged['H(rel%)'], 'C2-')
+    axs[1,1].plot(averaged.index, averaged['L(lux)'], 'C3-')
 
-    # formatter = mdates.DateFormatter('%H:%M:%S')
+    formatter = mdates.DateFormatter('%H:%M')
 
-    for axis in ax:
-        axis.xaxis.set_major_formatter(
-            mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
-        plt.setp(axis.get_xticklabels(), rotation = 45)
+    for ax in axs.reshape(-1):
+        ax.xaxis.set_major_formatter(formatter)
+        plt.setp(ax.get_xticklabels(), rotation = 45)
 
-    ax[0,0].set_ylabel(u'Temperature (℃)')
-    ax[0,1].set_ylabel('Pressure (Pa)')
-    ax[1,0].set_ylabel('Rel. humidity %')
-    ax[1,1].set_ylabel('Light intensity (lux)')
+    axs[0,0].set_ylabel(u'Temperature (℃)')
+    axs[0,1].set_ylabel('Pressure (Pa)')
+    axs[1,0].set_ylabel('Rel. humidity %')
+    axs[1,1].set_ylabel('Light intensity (lux)')
+
+    fig.suptitle(today)
 
     # sns.despine()
     plt.tight_layout()
     # plt.show()
     fig.savefig('graphs.png', dpi=600, pad_inches=0.05, bbox_inches='tight')
+    return
 
 
-
-def tweet(text2tweet):
+def tweet():
     '''Tweet measurements.'''
 
     ### Post to twitter
@@ -68,11 +72,11 @@ def tweet(text2tweet):
                         access_token_secret=access_token_secret)
 
 
-    status = api.PostUpdate(text2tweet)
+    status = api.PostUpdate('Wow, the data over 24 hours. Nice!', media='graphs.png')
     
     return
 
 
 if __name__ == "__main__":
-    text2tweet = sensorData()
-    # tweet(text2tweet)
+    sensorData()
+    tweet()

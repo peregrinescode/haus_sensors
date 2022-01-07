@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 def sensorData():
     '''Read in and average the last hour of data.'''
-    df = pd.read_csv('data.csv', index_col=0)
+    df = pd.read_csv('/home/pi/haus_sensors/data.csv', index_col=0)
 
     # Specify date/time format
     df.index = pd.to_datetime(df.index)
