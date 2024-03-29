@@ -90,7 +90,7 @@ def main():
     x = datetime.datetime.now()
 
     # Write to file
-    with open('/home/pi/haus_sensors/data.csv', 'a') as f:
+    with open('/home/ross/git/haus_sensors/data.csv', 'a') as f:
         f_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         f_writer.writerow([x, T, L, T2, H, T3, P, M])
 
