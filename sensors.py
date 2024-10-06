@@ -64,7 +64,10 @@ else:
 
 
 # Read air quality sensor data
-sds = SDS011("/dev/ttyUSB0", use_query_mode=True)
-# time.sleep(15)  # Allow time for the sensor to measure properly
-print(sds.query())  # Gets (pm25, pm10)
-# sds.sleep()  # Turn off fan and diode
+sds011.cmd_set_sleep(0) # turn on sensor
+print('Making air quality measurement...')
+time.sleep(15)  # give it 15 secs to warm up
+values = sds011.cmd_query_data();
+if values is not None and len(values) == 2:
+    print("PM2.5: ", values[0], ", PM10: ", values[1])
+sds011.cmd_set_sleep(1) # turn off sensor

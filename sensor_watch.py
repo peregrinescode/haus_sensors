@@ -2,6 +2,7 @@ import smbus
 import csv
 import datetime
 import time
+import sds011
 
 def main():
     '''Returns readings for all sensors'''
@@ -87,10 +88,11 @@ def main():
         M = 0
 
     # Read air quality sensor data
-    sds = SDS011("/dev/ttyUSB0", use_query_mode=True)
-    time.sleep(15)  # Allow time for the sensor to measure properly
-    sensor.query()  # Gets (pm25, pm10)
-    sensor.sleep()  # Turn off fan and diode
+    sds011.cmd_set_sleep(0) # turn on sensor
+    # print('Making air quality measurement...')
+    time.sleep(15)  # give it 15 secs to warm up
+    values = sds011.cmd_query_data()
+    sds011.cmd_set_sleep(1) # turn off sensor
 
     # get date and time
     x = datetime.datetime.now()
@@ -98,7 +100,7 @@ def main():
     # Write to file
     with open('/home/ross/git/haus_sensors/data.csv', 'a') as f:
         f_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        f_writer.writerow([x, T, L, T2, H, T3, P, M])
+        f_writer.writerow([x, T, L, T2, H, T3, P, M, values[0], values[1]])
 
     return
 
