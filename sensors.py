@@ -1,4 +1,6 @@
 import smbus
+import sds011
+import time
 
 DEVICE_BUS = 1
 
@@ -59,3 +61,10 @@ if aReceiveBuf[HUMAN_DETECT] == 1 :
     print("Live body detected within 5 seconds!")
 else:
     print("No humans detected!")
+
+
+# Read air quality sensor data
+sds = SDS011("/dev/ttyUSB0", use_query_mode=True)
+# time.sleep(15)  # Allow time for the sensor to measure properly
+print(sds.query())  # Gets (pm25, pm10)
+# sds.sleep()  # Turn off fan and diode

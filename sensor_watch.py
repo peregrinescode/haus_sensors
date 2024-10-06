@@ -1,6 +1,7 @@
 import smbus
 import csv
 import datetime
+import time
 
 def main():
     '''Returns readings for all sensors'''
@@ -85,6 +86,11 @@ def main():
         # print("No humans detected!")
         M = 0
 
+    # Read air quality sensor data
+    sds = SDS011("/dev/ttyUSB0", use_query_mode=True)
+    time.sleep(15)  # Allow time for the sensor to measure properly
+    sensor.query()  # Gets (pm25, pm10)
+    sensor.sleep()  # Turn off fan and diode
 
     # get date and time
     x = datetime.datetime.now()

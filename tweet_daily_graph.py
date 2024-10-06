@@ -1,4 +1,4 @@
-import twitter
+#import twitter
 import os
 import numpy as np
 import pandas as pd
@@ -8,14 +8,14 @@ import seaborn as sns
 sns.set_style("ticks")
 sns.set_context("paper")
 
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 
 def sensorData():
     '''Create graphs'''
 
     # Read in data from file
-    df = pd.read_csv('/home/pi/haus_sensors/data.csv', index_col=0)
+    df = pd.read_csv('/home/ross/git/haus_sensors/data.csv', index_col=0)
 
     df.index = pd.to_datetime(df.index)
     
@@ -49,7 +49,7 @@ def sensorData():
 
     # sns.despine()
     plt.tight_layout()
-    # plt.show()
+    plt.show()
     fig.savefig('graphs.png', dpi=600, pad_inches=0.05, bbox_inches='tight')
     return
 
@@ -79,4 +79,4 @@ def tweet():
 
 if __name__ == "__main__":
     sensorData()
-    tweet()
+   # tweet()
